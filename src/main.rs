@@ -47,6 +47,7 @@ fn main() -> io::Result<()> {
                 }
 
 
+                //Add a task
                 Key::Char('n') | Key::Char('N') => {
 
                     let mut input = String::new();
@@ -67,7 +68,7 @@ fn main() -> io::Result<()> {
                             let reader = BufReader::new(file);
                             for (index, line) in reader.lines().enumerate() {
                                 let line = line.unwrap();
-                                println!("{}. {}", index + 1, line);
+                                println!("{}. {}", index + 1, line,);
                             }
                         },
                         Err(error) => {
@@ -75,6 +76,28 @@ fn main() -> io::Result<()> {
                         },
                     }
                 }
+
+                Key::Char('t') | Key::Char('T') => {
+
+                    let mut line_number_to_delete = String::new();
+                    println!("Enter the line number to archive: ");
+                    io::stdin().read_line(&mut line_number_to_delete)?;
+
+                    // Parse the user input as an integer.
+                    let line_to_delete = line_number_to_delete.trim().parse::<usize>();
+
+                    let mut input = String::new();
+
+                    io::stdin().read_line(&mut input)?;
+                    let mut file = OpenOptions::new()
+                        .create(true)
+                        .append(true)
+                        .open("src/archived.txt")?;
+
+                    file.write_all(input.as_bytes())?;
+                    println!("\n Task successfully archived.");
+                }
+
 
 
                 Key::Char('h') | Key::Char('H') =>  println!("\n [S] Show tasks \n [N] Add a task \n [T] Archive a task \n [A] Show archived tasks \n [D] Delete a task with its number \n [H] Help \n [Q] Quit \n"),
